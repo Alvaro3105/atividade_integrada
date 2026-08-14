@@ -22,8 +22,14 @@ class QuestaoController extends Controller
      */
     public function store(Request $request)
     {
-        $questao = Questao::create($request->all());
-
+        $dados = $request->validate([
+            'enunciado' => 'required|string',
+            'alternativa_correta' => 'nullable|string|size:1',
+            'id_tema' => 'required|integer|exists:tema,id_tema',
+        ]);
+    
+        $questao = Questao::create($dados);
+    
         return response()->json($questao, 201);
     }
 
@@ -48,7 +54,23 @@ class QuestaoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $questao = Questao::find($id);
+
+        if (!$questao) {
+            return response()->json([
+                'message' => 'Questão não encontrada.'
+            ], 404);
+        }
+
+        $dados = $request->validate([
+            'enunciado' => 'sometimes|required|string',
+            'alternativa_correta' => 'sometimes|nullable|string|size:1',
+            'id_tema' => 'sometimes|required|integer|exists:tema,id_tema',
+        ]);
+
+        $questao->update($dados);
+
+        return response()->json($questao, 200);
     }
 
     /**

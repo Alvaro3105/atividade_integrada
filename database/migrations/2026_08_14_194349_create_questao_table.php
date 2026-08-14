@@ -9,13 +9,22 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
     public function up(): void
     {
-        Schema::create('questao', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
-    }
+    Schema::create('questao', function (Blueprint $table) {
+        $table->increments('id_questao');
+        $table->text('enunciado');
+        $table->char('alternativa_correta', 1)->nullable();
+        $table->unsignedInteger('id_tema');
+        $table->timestamps();
+
+        $table->foreign('id_tema')
+            ->references('id_tema')
+            ->on('tema');
+    });
+}
+
 
     /**
      * Reverse the migrations.
