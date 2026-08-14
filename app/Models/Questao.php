@@ -8,7 +8,9 @@ class Questao extends Model
 {
     protected $table = "questao";
 
-    protected $primary_key = "id_questao";
+    protected $primaryKey = 'id_questao';
+
+    public $timestamps = false;
 
     protected $fillable = [
         'enunciado', 
