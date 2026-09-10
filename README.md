@@ -1,49 +1,52 @@
-# 🧩 API REST de Questões em Laravel
+# API REST de Questões em Laravel
 
-Projeto acadêmico desenvolvido em **Laravel** para praticar a construção de uma API REST com operações de CRUD.
+Projeto acadêmico desenvolvido em **Laravel** para praticar construção de APIs REST, validação, persistência com Eloquent e relacionamento entre questões e temas.
 
-O foco do projeto é o gerenciamento da entidade **Questão**, utilizando rotas HTTP e organização típica de uma aplicação Laravel.
-
-## 🚀 Funcionalidades
+## Funcionalidades
 
 A API permite:
 
 - listar questões;
 - consultar uma questão por ID;
 - cadastrar novas questões;
-- atualizar questões;
-- excluir questões.
+- atualizar questões com `PUT` ou `PATCH`;
+- excluir questões;
+- validar a existência do tema associado;
+- preparar um tema inicial por seeder para facilitar testes locais.
 
-## 🛠️ Tecnologias
+## Tecnologias
 
 - PHP
-- Laravel
-- MySQL
-- API REST
-- MVC
+- Laravel 11
+- Eloquent ORM
+- MySQL ou SQLite
+- PHPUnit
 - Git e GitHub
 
-## 🔗 Endpoints
+## Endpoints
 
 | Método | Rota | Ação |
 |---|---|---|
 | GET | `/api/questoes` | Lista todas as questões |
-| GET | `/api/questoes/{id}` | Busca uma questão |
+| GET | `/api/questoes/{id}` | Busca uma questão por ID |
 | POST | `/api/questoes` | Cadastra uma questão |
 | PUT | `/api/questoes/{id}` | Atualiza uma questão |
-| PATCH | `/api/questoes/{id}` | Atualiza parcialmente uma questão |
+| PATCH | `/api/questoes/{id}` | Atualiza parcialmente |
 | DELETE | `/api/questoes/{id}` | Exclui uma questão |
 
-## 📂 Estrutura utilizada
+## Exemplo de payload
 
-O projeto segue a organização do Laravel, com destaque para:
+```json
+{
+  "enunciado": "Quanto é 2 + 2?",
+  "alternativa_correta": "A",
+  "id_tema": 1
+}
+```
 
-- **Controller** para receber e processar as requisições;
-- **Model** para representar a entidade;
-- **Migrations** para estrutura do banco de dados;
-- **Routes** para definição dos endpoints da API.
+O campo `id_tema` precisa apontar para um tema existente. O projeto inclui uma migration para a tabela `tema` e um registro inicial criado pelo seeder.
 
-## ▶️ Como executar
+## Como executar
 
 ```bash
 git clone https://github.com/Alvaro3105/atividade_integrada.git
@@ -51,22 +54,53 @@ cd atividade_integrada
 composer install
 cp .env.example .env
 php artisan key:generate
-```
-
-Configure a conexão com o banco de dados no arquivo `.env` e depois execute:
-
-```bash
-php artisan migrate
+php artisan migrate --seed
 php artisan serve
 ```
 
-A API poderá ser acessada pelas rotas em `/api/questoes`.
+No Windows CMD, caso `cp` não esteja disponível:
 
-## 🎓 Contexto
+```cmd
+copy .env.example .env
+```
 
-Projeto acadêmico desenvolvido durante minha formação técnica em TI no COTEMIG para praticar Laravel, APIs REST, arquitetura MVC e persistência de dados.
+Por padrão, o `.env.example` utiliza SQLite. Para MySQL, configure `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` e `DB_PASSWORD` no `.env`.
 
----
+## Testes
 
-**Álvaro Pires de Souza**  
-[GitHub](https://github.com/Alvaro3105) • [LinkedIn](https://www.linkedin.com/in/alvaro-pires-de-souza/)
+O projeto possui teste de integração para o fluxo CRUD de questões e para a validação de tema inexistente.
+
+```bash
+php artisan test
+```
+
+O ambiente de testes utiliza SQLite em memória, conforme `phpunit.xml`.
+
+## Estrutura principal
+
+```text
+app/
+├── Http/Controllers/QuestaoController.php
+└── Models/Questao.php
+
+database/
+├── migrations/
+│   ├── ...create_tema_table.php
+│   └── ...create_questao_table.php
+└── seeders/DatabaseSeeder.php
+
+routes/api.php
+tests/Feature/QuestaoApiTest.php
+```
+
+## Contexto
+
+Projeto acadêmico desenvolvido durante minha formação técnica em TI no COTEMIG para praticar Laravel, APIs REST, MVC, validação de requisições, migrations e persistência de dados.
+
+## Autor
+
+**Álvaro Pires de Souza**
+
+- GitHub: https://github.com/Alvaro3105
+- LinkedIn: https://www.linkedin.com/in/alvaro-pires-de-souza/
+- Portfólio: https://alvaro3105.github.io/Portfolio/
